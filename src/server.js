@@ -1,21 +1,48 @@
-import express from "express"; //nạp express
-import bodyParser from "body-parser"; //nạp body-parser lấy tham số từ client /user?id=7
-import viewEngine from "./config/viewEngine"; //nạp viewEngine
-import initWebRoutes from './route/web'; //nạp file web từ Route
-require('dotenv').config(); //gọi hàm config của dotenv để chạy lệnh process.env.PORT
+import express from 'express';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+// middlewares
+import authenticateToken from './middleware/authenticateToken.js';
+// config
+import connectDB from './config/database.js';
+// route
+import authAPIRoute from './route/authRoute.js';
 
-let app = express();
+require('dotenv').config();
 
-//config app
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }))
-viewEngine(app);
-initWebRoutes(app);
+const startServer = async () => {
+    try {
+        const app = express();
 
-let port = process.env.PORT || 3001; //tạo tham số port lấy từ .env
-//Port === undefined => port = 6969
-//chạy server
-app.listen(port, () => {
-    //callback
-    console.log("Backend Nodejs is runing on the port : " + port)
-})
+        // Cấu hình ứng dụng
+        app.use(cors({
+            origin: [process.env.BACKEND_URL, process.env.FRONTEND_URL],
+            credentials: true
+        }));
+
+        // Sử dụng middleware
+        app.use(bodyParser.json());
+        app.use(cookieParser());
+        app.use(express.static('public'));
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(authenticateToken);
+
+        // Đăng ký route
+        authAPIRoute(app); // Đăng ký route cho API đăng nhập
+
+
+        // Kết nối cơ sở dữ liệu
+        connectDB();
+
+        const port = process.env.PORT || 3001;
+        app.listen(port, () => {
+            console.log(`Backend Nodejs is running on port : ${port}`);
+        });
+
+    } catch (error) {
+        console.error('Lỗi khi khởi động server:', error);
+    }
+};
+
+startServer();

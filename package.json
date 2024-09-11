@@ -4,23 +4,34 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec babel-node src/server.js"
+    "start": "nodemon --exec babel-node src/server.js",
+    "sequelize": "sequelize",
+    "db:migrate": "sequelize db:migrate",
+    "db:seed": "sequelize db:seed:all",
+    "db:create": "sequelize db:create",
+    "db:drop": "sequelize db:drop"
   },
   "author": "Vu Khanh Quoc",
   "license": "Apache-2.0",
   "description": "",
   "dependencies": {
-    "body-parser": "^1.20.2",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
-    "express": "^4.19.2",
-    "mysql2": "^3.10.2",
+    "express": "^4.20.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.0",
+    "nodemailer": "^6.9.15",
+    "secrets": "^1.1.5",
     "sequelize": "^6.37.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.7",
-    "@babel/node": "^7.24.7",
-    "@babel/preset-env": "^7.24.7",
+    "@babel/core": "^7.25.2",
+    "@babel/node": "^7.25.0",
+    "@babel/preset-env": "^7.25.4",
     "nodemon": "^3.1.4",
     "sequelize-cli": "^6.6.2"
   }
