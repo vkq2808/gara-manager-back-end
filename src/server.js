@@ -5,6 +5,7 @@ import cors from 'cors';
 // middlewares
 import authenticateToken from './middleware/authenticateToken.js';
 // config
+import updateConfig from './config/config.js';
 import connectDB from './config/database.js';
 // route
 import authAPIRoute from './route/authRoute.js';
@@ -15,13 +16,10 @@ const startServer = async () => {
     try {
         const app = express();
 
-        // Cấu hình ứng dụng
-        app.use(cors({
-            origin: [process.env.BACKEND_URL, process.env.FRONTEND_URL],
-            credentials: true
-        }));
+        // update config
+        updateConfig();
 
-        // Sử dụng middleware
+        // Cấu hình ứng dụng
         app.use(bodyParser.json());
         app.use(cookieParser());
         app.use(express.static('public'));
