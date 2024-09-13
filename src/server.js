@@ -3,9 +3,8 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 // middlewares
-import authenticateToken from './middleware/authenticateToken.js';
+import authenticateToken from './middlewares/authenticateToken.js';
 // config
-import updateConfig from './config/config.js';
 import connectDB from './config/database.js';
 // route
 import authAPIRoute from './route/authRoute.js';
@@ -16,8 +15,11 @@ const startServer = async () => {
     try {
         const app = express();
 
-        // update config
-        updateConfig();
+        // config cors
+        app.use(cors({
+            origin: process.env.CLIENT_URL,
+            credentials: true,
+        }));
 
         // Cấu hình ứng dụng
         app.use(bodyParser.json());
