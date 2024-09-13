@@ -3,10 +3,10 @@ import jwt from 'jsonwebtoken'; //gọi jwt
 
 const authenticateToken = (req, res, next) => {
     // Miễn xác thực cho các route cụ thể
-    const openRoutes = ['/api/auth'];
+    const openRoutes = ['/auth'];
 
     // Nếu là một trong các route miễn xác thực, bỏ qua middleware
-    if (openRoutes.includes(req.path)) {
+    if (req.path.includes(openRoutes)) {
         return next();
     }
 
@@ -14,7 +14,7 @@ const authenticateToken = (req, res, next) => {
         // Kiểm tra token từ header Authorization hoặc từ cookie
         const token = req.headers['authorization'] || req?.cookies?.token;
         if (!token) {
-            // chuyển người dùng về trang login nếu không có token
+            console.log("Token not found");
             return res.redirect('/login');
         }
 
