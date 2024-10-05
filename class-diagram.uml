@@ -1,0 +1,251 @@
+@startuml
+' Định nghĩa các class với method bổ sung
+
+class Category {
+  +id: int
+  +name: String
+  +description: String
+  +create(name: String, description: String): boolean
+  +update(id: int, name: String, description: String): boolean
+  +delete(id: int): boolean
+  +getItems(id: int): List<Item>
+}
+
+class Item {
+  +id: int
+  +name: String
+  +description: String
+  +price: double
+  +create(name: String, description: String, price: double): boolean
+  +update(id: int, name: String, description: String, price: double): boolean
+  +delete(id: int): boolean
+  +getItemDetails(id: int): Item
+}
+
+class Product {
+  +id: int
+  +category_id: int
+  +quantity: int
+  +status: String
+  +created_at: DateTime
+  +updated_at: DateTime
+  +create(category_id: int, quantity: int, status: String): boolean
+  +update(id: int, category_id: int, quantity: int, status: String): boolean
+  +delete(id: int): boolean
+  +checkStock(id: int): boolean
+}
+
+class Service {
+  +id: int
+  +status: String
+  +created_at: DateTime
+  +updated_at: DateTime
+  +create(status: String): boolean
+  +update(id: int, status: String): boolean
+  +delete(id: int): boolean
+}
+
+class CartItem {
+  +id: int
+  +cart_id: int
+  +quantity: int
+  +price: double
+  +created_at: DateTime
+  +updated_at: DateTime
+  +create(cart_id: int, quantity: int, price: double): boolean
+  +update(id: int, quantity: int, price: double): boolean
+  +delete(id: int): boolean
+}
+
+class Cart {
+  +id: int
+  +user_id: int
+  +status: String
+  +created_at: DateTime
+  +updated_at: DateTime
+  +addItem(item: Item): isSuccess:boolean
+  +removeItem(item: Item): isSuccess:boolean
+  +clearCart(): boolean
+  +getTotalPrice(): double
+}
+
+class User {
+  +id: int
+  +name: String
+  +email: String
+  +hashed_password: String
+  +phone: String
+  +address: String
+  +role: String
+  +created_at: DateTime
+  +updated_at: DateTime
+  +login(email: String, hashed_password: String): token: String
+  +create(email: String, hashed_password: String, name: String, address: String): User
+  +update(id: int, name: String, address: String): boolean
+  +changePassword(id: int, old_password: String, new_password: String): boolean
+}
+
+class Order {
+  +id: int
+  +user_id: int
+  +status: String
+  +total_price: double
+  +payment_status: String
+  +shipping_address: String
+  +created_at: DateTime
+  +updated_at: DateTime
+  +create(user_id: int, shipping_address: String): boolean
+  +updateStatus(id: int, status: String): boolean
+  +calculateTotal(order_id: int): double
+}
+
+class OrderItem {
+  +id: int
+  +order_id: int
+  +quantity: int
+  +price: double
+  +created_at: DateTime
+  +updated_at: DateTime
+  +addItem(order_id: int, quantity: int, price: double): boolean
+  +updateItem(id: int, quantity: int, price: double): boolean
+  +removeItem(id: int): boolean
+}
+
+class Promotion {
+  +id: int
+  +name: String
+  +description: String
+  +discount: double
+  +start_date: DateTime
+  +end_date: DateTime
+  +status: String
+  +create(name: String, description: String, discount: double, start_date: DateTime, end_date: DateTime): boolean
+  +update(id: int, name: String, description: String, discount: double): boolean
+  +applyPromotion(order_id: int): boolean
+  +isValid(): boolean
+}
+
+class PromotionItem {
+  +id: int
+  +promotion_id: int
+  +created_at: DateTime
+  +updated_at: DateTime
+  +addPromotionItem(promotion_id: int, item_id: int): boolean
+  +removePromotionItem(id: int): boolean
+}
+
+class Transaction {
+  +id: int
+  +order_id: int
+  +amount: double
+  +payment_method: String
+  +payment_status: String
+  +payment_date: DateTime
+  +create(order_id: int, amount: double, payment_method: String): boolean
+  +updateStatus(id: int, payment_status: String): boolean
+  +refund(id: int): boolean
+}
+
+class Receipt {
+  +id: int
+  +transaction_id: int
+  +receipt_number: String
+  +receipt_date: DateTime
+  +generateReceipt(transaction_id: int): String
+  +getReceiptDetails(id: int): Receipt
+}
+
+class Shipment {
+  +id: int
+  +order_id: int
+  +shipping_date: DateTime
+  +shipping_address: String
+  +tracking_number: String
+  +status: String
+  +create(order_id: int, shipping_address: String, tracking_number: String): boolean
+  +updateStatus(id: int, status: String): boolean
+  +trackShipment(id: int): String
+}
+
+
+class Car {
+  +id: int
+  +user_id: int
+  +license_plate: String
+  +model: String
+  +color: String
+  +created_at: DateTime
+  +register(user_id: int, license_plate: String, model: String, color: String): boolean
+  +update(id: int, license_plate: String, model: String, color: String): boolean
+  +delete(id: int): boolean
+}
+
+class GarageParking {
+  +id: int
+  +location: String
+  +capacity: int
+  +create(location: String, capacity: int): boolean
+  +update(id: int, location: String, capacity: int): boolean
+}
+
+class ParkingContract {
+  +id: int
+  +user_id: int
+  +car_id: int
+  +start_date: DateTime
+  +end_date: DateTime
+  +status: String
+  +create(user_id: int, car_id: int, start_date: DateTime, end_date: DateTime): boolean
+  +updateStatus(id: int, status: String): boolean
+}
+
+class Banner {
+  +id: int
+  +content: String
+  +image_url: String
+  +start_date: DateTime
+  +end_date: DateTime
+  +status: String
+  +create(content: String, image_url: String, start_date: DateTime, end_date: DateTime): boolean
+  +update(id: int, content: String, image_url: String): boolean
+  +delete(id: int): boolean
+}
+
+class Signatory {
+  +id: int
+  +contract_id: int
+  +name: String
+  +signed_at: DateTime
+  +signContract(contract_id: int, name: String): boolean
+  +getSignatoryDetails(contract_id: int): Signatory
+}
+
+' Mối quan hệ giữa Product, Service và Item
+Product --|> Item
+Service --|> Item
+
+' Các mối quan hệ giữa CartItem, OrderItem, PromotionItem với Item
+CartItem --* Item : refers_to
+OrderItem --* Item : refers_to
+PromotionItem --* Item : refers_to
+
+' Các mối quan hệ khác
+Category "1" -- "0..*" Product : contains
+Order "1" -- "0..*" OrderItem : includes
+User "1" -- "0..*" Order : places
+User "1" -- "0..*" Cart : owns
+Cart "1" -- "0..*" CartItem : contains
+Order "1" -- "0..1" Transaction : paid_by
+Transaction "1" -- "0..1" Receipt : generates
+Order "1" -- "0..1" Shipment : delivers
+Promotion "1" -- "0..*" PromotionItem : contains
+User "1" -- "0..*" Car : owns
+ParkingContract "1" -- "1" Transaction : has
+ParkingContract "1" -- "0..1" Car : for
+Car "1" -- "0..*" GarageParking : parks_at
+ParkingContract "1" -- "0..1" Signatory : signed_by
+
+' Mối quan hệ giữa Transaction và Promotion
+Transaction "0..1" -- "0..1" Promotion : applies
+
+@enduml

@@ -1,7 +1,8 @@
-const homeController = {
+const dashboardController = {
     getHomePage: (req, res) => {
         return res.send("Hello world");
     }
+
 }
 
-export default homeController;
+export default dashboardController;

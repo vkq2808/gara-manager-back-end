@@ -11,6 +11,7 @@ let createNewUser = async (data) => {
                 password: hashPasswordFromBcrypt,
                 firstName: data.firstName,
                 lastName: data.lastName,
+                role: data.role,
             });
             resolve(user);
         } catch (e) {
