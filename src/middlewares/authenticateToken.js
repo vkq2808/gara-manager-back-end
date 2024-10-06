@@ -11,21 +11,17 @@ const authenticateToken = (req, res, next) => {
     }
 
     try {
-        // Kiểm tra token từ header Authorization hoặc từ cookie
         const token = req.headers['authorization'] || req?.cookies?.token;
         if (!token) {
-            console.log("Token not found");
-            return res.redirect('/login');
+            return res.status(401).send({ msg: "Token not found" });
         }
 
         // Xác thực token
         jwt.verify(token, process.env.TOKEN_SERCET_KEY, (err, user) => {
-            // Nếu token không hợp lệ, chuyển người dùng về trang login
             if (err) {
-                return res.redirect('/login');
+                return res.status(401).send({ msg: "Unauthorized" });
             }
 
-            // Lưu thông tin người dùng vào request
             req.user = user;
             next();
         });

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import bcrypt, { hash } from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import userService from "../services/userService";
 
 import sendEmail from "../utils/sendEmail";
@@ -21,7 +21,7 @@ const handleLogin = async (req, res) => {
         const userLogin = await userService.getUserInfoByEmail(email);
 
         if (userLogin) {
-            let isPasswordCorrect = await bcrypt.compare(password, userLogin.password);
+            let isPasswordCorrect = await bcrypt.compare(password, userLogin.hashed_password);
             if (isPasswordCorrect) {
                 let accessToken = jwt.sign({ email: userLogin.email, id: userLogin.id }, process.env.ACCESS_TOKEN_SERCET_KEY, { expiresIn: '1h' });
                 let refreshToken = jwt.sign({ email: userLogin.email, id: userLogin.id }, process.env.REFRESH_TOKEN_SERCET_KEY, { expiresIn: '1d' });
@@ -87,12 +87,10 @@ const handleVerifyEmail = async (req, res) => {
                 return res.status(209).json({ msg: "Email already verified" });
             }
 
-            let hashPassword = await bcrypt.hash(decoded.password, process.env.SALT);
-
             let newUser = await userService.createNewUser({
                 email: decoded.email,
-                password: hashPassword,
-                fistName: decoded.firstName,
+                password: decoded.password,
+                firstName: decoded.firstName,
                 lastName: decoded.lastName,
                 role: decoded.role
             });
@@ -104,13 +102,77 @@ const handleVerifyEmail = async (req, res) => {
     }
 }
 
-const handleEnterEmailForResetingPassword = (req, res) => {
-    return res.send("Handle Enter Email For Reseting Password");
+const handleEnterEmailForResetingPassword = async (req, res) => {
+    let { email } = req.body;
+    if (!email) {
+        return res.status(209).json({ msg: "Email is required" });
+    }
+
+    let user = userService.getUserInfoByEmail(email);
+    if (!user) {
+        return res.status(207).json({ msg: "Email not found" });
+    }
+
+    const token = jwt.sign({ email }, process.env.RESET_PASSWORD_SECRET_KEY, { expiresIn: '5m' });
+
+    const resetPasswordLink = `${process.env.CLIENT_URL}/auth/reset-password/${token}`;
+
+    const mailOptions = {
+        from: process.env.SMTP_EMAIL,
+        to: email,
+        subject: 'Link reset password',
+        html: `<a href="${resetPasswordLink}">Click here to reset password</a>`
+    };
+
+    sendEmail(mailOptions);
+    return res.status(200).json({ msg: "Email sent to reset password" });
 }
 
 
-const handleResetPassword = (req, res) => {
-    return res.send("Handle Reset Password");
+const handleResetPassword = async (req, res) => {
+    let { token, password } = req.body;
+    if (!token || !password) {
+        return res.status(209).json({ msg: "Token and Password are required" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.RESET_PASSWORD_SECRET_KEY);
+        if (decoded) {
+            let user = userService.getUserInfoByEmail(decoded.email);
+            if (!user) {
+                return res.status(207).json({ msg: "Email not found" });
+            }
+
+            let updateUser = userService.updateUserPassword({ email: decoded.email, password });
+            return res.status(200).json({ msg: "Password changed successfully", user: updateUser });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(203).json({ msg: "Token is invalid or expired" });
+    }
+}
+
+let handleRefreshToken = async (req, res) => {
+    let { refreshToken } = req.body;
+    if (!refreshToken) {
+        return res.status(209).json({ msg: "Refresh token is required" });
+    }
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SERCET_KEY);
+        if (decoded) {
+            let user = await userService.getUserInfoByEmail(decoded.email);
+            if (!user) {
+                return res.status(207).json({ msg: "User not found" });
+            }
+
+            let accessToken = jwt.sign({ email: user.email, id: user.id }, process.env.ACCESS_TOKEN_SERCET_KEY, { expiresIn: '1h' });
+            return res.json({ msg: "Refresh token successfully", user: user, accessToken });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(203).json({ msg: "Token is invalid or expired" });
+    }
 }
 
 export default {
@@ -118,5 +180,6 @@ export default {
     handleRegister: handleRegister,
     handleVerifyEmail: handleVerifyEmail,
     handleEnterEmailForResetingPassword: handleEnterEmailForResetingPassword,
-    handleResetPassword: handleResetPassword
+    handleResetPassword: handleResetPassword,
+    handleRefreshToken: handleRefreshToken
 }

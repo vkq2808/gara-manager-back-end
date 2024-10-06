@@ -14,7 +14,7 @@ module.exports = {
             email: {
                 type: Sequelize.STRING
             },
-            password: {
+            hashed_password: {
                 type: Sequelize.STRING
             },
             firstName: {
@@ -32,8 +32,8 @@ module.exports = {
             gender: {
                 type: Sequelize.STRING
             },
-            roleId: {
-                type: Sequelize.INTEGER
+            role: {
+                type: Sequelize.STRING
             },
             positionId: {
                 type: Sequelize.INTEGER

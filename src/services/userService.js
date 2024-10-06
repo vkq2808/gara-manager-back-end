@@ -8,7 +8,7 @@ let createNewUser = async (data) => {
             let hashPasswordFromBcrypt = await hashUserPassword(data.password);
             let user = await db.User.create({
                 email: data.email,
-                password: hashPasswordFromBcrypt,
+                hashed_password: hashPasswordFromBcrypt,
                 firstName: data.firstName,
                 lastName: data.lastName,
                 role: data.role,
@@ -119,6 +119,26 @@ let getUserInfoByEmail = (userEmail) => {
     });
 }
 
+let updateUserPassword = ({ email, password }) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let hashPassword = await hashUserPassword(password);
+            let user = await db.User.findOne({
+                where: { email: email },
+            });
+            if (user) {
+                user.hashed_password = hashPassword;
+                await user.save();
+                resolve();
+            } else {
+                resolve();
+            }
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
 export default {
     createNewUser: createNewUser,
     getAllUsers: getAllUsers,
@@ -126,4 +146,5 @@ export default {
     updateUser: updateUser,
     deleteUser: deleteUser,
     getUserInfoByEmail: getUserInfoByEmail,
+    updateUserPassword: updateUserPassword,
 }

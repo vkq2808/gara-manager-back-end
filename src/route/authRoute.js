@@ -9,9 +9,10 @@ let authAPIRoute = (app) => {
     authAPI.post("/regist", loginController.handleRegister);
     authAPI.get("/verify-email/:token", loginController.handleVerifyEmail);
     authAPI.post("/reset-password", loginController.handleEnterEmailForResetingPassword);
-    authAPI.post("/reset-password/:token", loginController.handleResetPassword);
-    authAPI.get("/get-user-info", userController.handleGetUserInfo);
-    authAPI.get("/get-user-info/:userId", userController.handleGetUserInfo);
+    authAPI.post("/change-password", loginController.handleResetPassword);
+    authAPI.post("/get-user-info", userController.handleGetUserInfo);
+
+    authAPI.post("refresh-token", loginController.handleRefreshToken);
 
     return app.use("/auth", authAPI);
 }
