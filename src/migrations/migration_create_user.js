@@ -35,9 +35,6 @@ module.exports = {
             role: {
                 type: Sequelize.STRING
             },
-            positionId: {
-                type: Sequelize.INTEGER
-            },
             imageUrl: {
                 type: Sequelize.STRING
             },
