@@ -12,16 +12,16 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             email: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                allowNull: false
             },
-            hashed_password: {
-                type: Sequelize.STRING
+            password: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
-            firstName: {
-                type: Sequelize.STRING
-            },
-            lastName: {
-                type: Sequelize.STRING
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
             address: {
                 type: Sequelize.STRING
@@ -33,19 +33,21 @@ module.exports = {
                 type: Sequelize.STRING
             },
             role: {
-                type: Sequelize.STRING
+                type: Sequelize.INTEGER,
+                allowNull: false
             },
             imageUrl: {
                 type: Sequelize.STRING
             },
-            createdAt: {
+            ccreatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             }
         });
     },

@@ -1,2 +1,3 @@
-let a = " a ";
-console.log(a.trim().length);
+const crypto = require('crypto')
+let a = crypto.randomBytes(16).toString('hex')
+console.log(a);
