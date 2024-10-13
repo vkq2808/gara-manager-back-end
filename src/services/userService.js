@@ -9,7 +9,8 @@ export const createNewUser = async (data) => {
             await db.User.create({
                 email: data.email,
                 password: hashPasswordFromBcrypt,
-                name: data.name,
+                firstName: data.firstName,
+                lastName: data.lastName,
                 gender: data.gender,
                 birth: data.birth,
                 role: data.role
