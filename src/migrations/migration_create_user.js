@@ -15,7 +15,7 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            password: {
+            hashed_password: {
                 type: Sequelize.STRING,
                 allowNull: false
             },
@@ -35,6 +35,9 @@ module.exports = {
             },
             gender: {
                 type: Sequelize.STRING
+            }, birth: {
+                type: Sequelize.DATE,
+                allowNull: false
             },
             role: {
                 type: Sequelize.STRING,

@@ -8,10 +8,10 @@ export const createNewUser = async (data) => {
             let hashPasswordFromBcrypt = await hashUserPassword(data.password);
             await db.User.create({
                 email: data.email,
-                password: hashPasswordFromBcrypt,
+                hashed_password: hashPasswordFromBcrypt,
                 firstName: data.firstName,
                 lastName: data.lastName,
-                gender: data.gender,
+                phone: data.phone,
                 birth: data.birth,
                 role: data.role
             });
@@ -23,7 +23,7 @@ export const createNewUser = async (data) => {
     });
 }
 
-export const hashUserPassword = (password) => {
+const hashUserPassword = (password) => {
     return new Promise(async (resolve, reject) => {
         try {
             let hashPassword = bcrypt.hashSync(password, salt);

@@ -4,11 +4,11 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 // middlewares
 import authenticateToken from './middlewares/authenticateToken.js';
+import helmet from 'helmet';
 // config
 import connectDB from './config/database.js';
 // route
-import authAPIRoute from './route/authRoute.js';
-import productRoute from './route/productRoute.js';
+import { authAPIRoute, productRoute } from './routes';
 
 
 require('dotenv').config();
@@ -28,7 +28,15 @@ const startServer = async () => {
         app.use(cookieParser());
         app.use(express.static('public'));
         app.use(bodyParser.urlencoded({ extended: true }));
+
+        // Middleware
         app.use(authenticateToken);
+        app.use(helmet(
+            {
+                contentSecurityPolicy: false, // tắt chế độ CSP, tránh lỗi khi load ảnh từ url
+                xFrameOptions: false, // tắt chế độ xFrameOptions, tránh tấn công clickjacking
+            }
+        ));
 
         // Đăng ký route
         authAPIRoute(app);
