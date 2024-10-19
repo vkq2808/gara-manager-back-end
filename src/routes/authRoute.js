@@ -21,7 +21,7 @@ let authAPIRoute = (app) => {
 
     authAPI.post("refresh-token", handleRefreshToken);
 
-    return app.use("/auth", authAPI);
+    return app.use("/api/v1/auth", authAPI);
 }
 
 export default authAPIRoute;

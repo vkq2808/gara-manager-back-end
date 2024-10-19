@@ -7,7 +7,7 @@ let productRoute = (app) => {
     route.get("/", handleGetAllProducts);
     route.get("/:path", handleGetProductDetail);
 
-    return app.use("/product", route);
+    return app.use("/api/v1/product", route);
 }
 
 export default productRoute;
